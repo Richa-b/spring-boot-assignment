@@ -19,4 +19,8 @@ public interface DriverService
 
     List<DriverDO> find(OnlineStatus onlineStatus);
 
+    void selectCar(long driverId, long carId) throws EntityNotFoundException;
+
+    void deselectCar(long driverId) throws EntityNotFoundException;
+
 }

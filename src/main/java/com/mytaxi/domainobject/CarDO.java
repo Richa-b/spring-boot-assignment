@@ -50,6 +50,10 @@ public class CarDO extends BaseDO {
     @ManyToOne
     ManufacturerDO manufacturer;
 
+    @OneToOne
+    @JoinColumn(name = "driver_id")
+    DriverDO driverDO;
+
     public CarDO(String model, String color, String licensePlate, Integer seatCount, Boolean convertible, Float rating, EngineType engineType, Transmission transmission, CarType carType,Long manufacturerId) {
         this.model = model;
         this.color = color;

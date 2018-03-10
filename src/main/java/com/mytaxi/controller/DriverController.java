@@ -72,6 +72,15 @@ public class DriverController
         driverService.updateLocation(driverId, longitude, latitude);
     }
 
+    @PutMapping("selectCar/{driverId}")
+    public void selectCar(@PathVariable long driverId,@RequestParam Long carId ) throws EntityNotFoundException{
+        driverService.selectCar(driverId,carId);
+    }
+
+    @PutMapping("deselectCar/{driverId}")
+    public void deselectCar(@PathVariable long driverId) throws EntityNotFoundException{
+        driverService.deselectCar(driverId);
+    }
 
     @GetMapping
     public List<DriverDTO> findDrivers(@RequestParam OnlineStatus onlineStatus)

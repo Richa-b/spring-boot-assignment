@@ -1,12 +1,16 @@
 package com.mytaxi.service.driver;
 
 import com.mytaxi.dataaccessobject.DriverRepository;
+import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.GeoCoordinate;
 import com.mytaxi.domainvalue.OnlineStatus;
 import com.mytaxi.exception.ConstraintsViolationException;
 import com.mytaxi.exception.EntityNotFoundException;
+
 import java.util.List;
+
+import com.mytaxi.service.car.CarService;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -17,17 +21,17 @@ import org.springframework.transaction.annotation.Transactional;
  * <p/>
  */
 @Service
-public class DefaultDriverService implements DriverService
-{
+public class DefaultDriverService implements DriverService {
 
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(DefaultDriverService.class);
 
     private final DriverRepository driverRepository;
 
+    private final CarService carService;
 
-    public DefaultDriverService(final DriverRepository driverRepository)
-    {
+    public DefaultDriverService(final DriverRepository driverRepository, final CarService carService) {
         this.driverRepository = driverRepository;
+        this.carService = carService;
     }
 
 
@@ -113,8 +117,24 @@ public class DefaultDriverService implements DriverService
     }
 
 
-    private DriverDO findDriverChecked(Long driverId) throws EntityNotFoundException
-    {
+    @Override
+    @Transactional
+    public void selectCar(long driverId, long carId) throws EntityNotFoundException {
+        DriverDO driverDO = findDriverChecked(driverId);
+        CarDO carDO = carService.find(carId);
+        carDO.setDriverDO(driverDO);
+    }
+
+    @Override
+    @Transactional
+    public void deselectCar(long driverId) throws EntityNotFoundException {
+        DriverDO driverDO = findDriverChecked(driverId);
+        CarDO carDO = carService.findByDriver(driverDO);
+        carDO.setDriverDO(null);
+    }
+
+    private DriverDO findDriverChecked(Long driverId) throws EntityNotFoundException {
+
         DriverDO driverDO = driverRepository.findOne(driverId);
         if (driverDO == null)
         {

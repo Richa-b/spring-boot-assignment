@@ -3,6 +3,7 @@ package com.mytaxi.service.car;
 
 import com.mytaxi.dataaccessobject.CarRepository;
 import com.mytaxi.domainobject.CarDO;
+import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainobject.ManufacturerDO;
 import com.mytaxi.exception.ConstraintsViolationException;
 import com.mytaxi.exception.EntityNotFoundException;
@@ -36,5 +37,10 @@ public class CarServiceImpl extends BaseServiceImpl<CarDO, Long> implements CarS
         ManufacturerDO manufacturerDO = manufacturerService.find(carDO.getManufacturer().getId());
         carDO.setManufacturer(manufacturerDO);
         return create(carDO);
+    }
+
+    @Override
+    public CarDO findByDriver(DriverDO driverDO) {
+        return carRepository.findByDriverDO(driverDO);
     }
 }
