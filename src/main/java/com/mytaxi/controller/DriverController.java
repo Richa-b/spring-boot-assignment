@@ -4,7 +4,9 @@ import com.mytaxi.controller.mapper.DriverMapper;
 import com.mytaxi.datatransferobject.DriverDTO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
+import com.mytaxi.exception.CarAlreadyInUseException;
 import com.mytaxi.exception.ConstraintsViolationException;
+import com.mytaxi.exception.DriverNotOnlineException;
 import com.mytaxi.exception.EntityNotFoundException;
 import com.mytaxi.service.driver.DriverService;
 import java.util.List;
@@ -73,7 +75,7 @@ public class DriverController
     }
 
     @PutMapping("selectCar/{driverId}")
-    public void selectCar(@PathVariable long driverId,@RequestParam Long carId ) throws EntityNotFoundException{
+    public void selectCar(@PathVariable long driverId,@RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
         driverService.selectCar(driverId,carId);
     }
 

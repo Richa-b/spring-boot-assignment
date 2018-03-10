@@ -5,10 +5,13 @@ import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.GeoCoordinate;
 import com.mytaxi.domainvalue.OnlineStatus;
+import com.mytaxi.exception.CarAlreadyInUseException;
 import com.mytaxi.exception.ConstraintsViolationException;
+import com.mytaxi.exception.DriverNotOnlineException;
 import com.mytaxi.exception.EntityNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.mytaxi.service.car.CarService;
 import org.slf4j.LoggerFactory;
@@ -119,10 +122,18 @@ public class DefaultDriverService implements DriverService {
 
     @Override
     @Transactional
-    public void selectCar(long driverId, long carId) throws EntityNotFoundException {
+    public void selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException {
         DriverDO driverDO = findDriverChecked(driverId);
-        CarDO carDO = carService.find(carId);
-        carDO.setDriverDO(driverDO);
+        if (!OnlineStatus.ONLINE.equals(driverDO.getOnlineStatus())) {
+            throw new DriverNotOnlineException("Driver with id:" + driverDO.getId() + " is not ONLINE");
+        } else {
+            CarDO carDO = carService.find(carId);
+            DriverDO someOtherDriver = carDO.getDriverDO();
+            if (Objects.nonNull(someOtherDriver) && !someOtherDriver.getId().equals(driverDO.getId())) {
+                throw new CarAlreadyInUseException("Requested Car with id:" + carId + " is already in use by some other driver");
+            }
+            carDO.setDriverDO(driverDO);
+        }
     }
 
     @Override
@@ -130,7 +141,9 @@ public class DefaultDriverService implements DriverService {
     public void deselectCar(long driverId) throws EntityNotFoundException {
         DriverDO driverDO = findDriverChecked(driverId);
         CarDO carDO = carService.findByDriver(driverDO);
-        carDO.setDriverDO(null);
+        if (Objects.nonNull(carDO)) {
+            carDO.setDriverDO(null);
+        }
     }
 
     private DriverDO findDriverChecked(Long driverId) throws EntityNotFoundException {
