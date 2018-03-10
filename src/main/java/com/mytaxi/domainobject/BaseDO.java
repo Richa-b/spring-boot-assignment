@@ -35,4 +35,7 @@ public class BaseDO {
     @Id
     @GeneratedValue
     private Long id;
+
+    @Column(nullable = false)
+    private Boolean deleted = false;
 }
