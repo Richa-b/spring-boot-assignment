@@ -40,3 +40,20 @@ values
  (8,
  'aced0005737200226f72672e737072696e676672616d65776f726b2e646174612e67656f2e506f696e7431b9e90ef11a4006020002440001784400017978704023000000000000404bfa1cac083127', now(), now(), false, 'ONLINE',
 'driver08pw', 'driver08');
+
+
+-- Create 3 Manufacturers
+INSERT INTO manufacturer(id,name,date_created, deleted,created_by,last_updated) VALUES (1,'Hyundai',now(),FALSE ,'DUMMY_USER',now());
+INSERT INTO manufacturer(id,name,date_created, deleted,created_by,last_updated) VALUES (2,'Mahindra',now(),FALSE ,'DUMMY_USER',now());
+INSERT INTO manufacturer(id,name,date_created, deleted,created_by,last_updated) VALUES (3,'Suzuki',now(),FALSE ,'DUMMY_USER',now());
+
+
+-- Create 3 Cars
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated) VALUES
+(1,'Swift','Black','MH-15-AB-1234' , 5,false,3,'PETROL','MANUAL','SMALL',3,now(),FALSE ,'DUMMY_USER',now());
+
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated) VALUES
+(2,'i30','White','AP-19-AK-2804',6,false,4,'DIESEL','AUTOMATIC','MEDIUM' ,1,now(),FALSE ,'DUMMY_USER',now());
+
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated) VALUES
+(3,'Scorpio','White','MH-41-UB-8192',8,false,5,'DIESEL','MANUAL','SUV' ,2,now(),FALSE ,'DUMMY_USER',now());
