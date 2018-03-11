@@ -57,3 +57,14 @@ INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engi
 
 INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated) VALUES
 (3,'Scorpio','White','MH-41-UB-8192',8,false,5,'DIESEL','MANUAL','SUV' ,2,now(),FALSE ,'DUMMY_USER',now());
+
+
+-- Cars With Driver Associated
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated,driver_id) VALUES
+(4,'Swift','Black','MH-15-AB-1568' , 5,false,3,'ELECTRIC','AUTOMATIC','SMALL',1,now(),FALSE ,'DUMMY_USER',now(),4);
+
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated,driver_id) VALUES
+(5,'i30','White','AP-19-AK-1234',6,TRUE ,4,'DIESEL','AUTOMATIC','MEDIUM' ,1,now(),FALSE ,'DUMMY_USER',now(),5);
+
+INSERT INTO car (id,model,color,license_plate,seat_count,convertible,rating,engine_type,transmission,car_type,manufacturer_id,date_created, deleted,created_by,last_updated,driver_id) VALUES
+(6,'Scorpio','White','MH-41-UB-9808',8,false,5,'DIESEL','MANUAL','SUV' ,2,now(),FALSE ,'DUMMY_USER',now(),6);

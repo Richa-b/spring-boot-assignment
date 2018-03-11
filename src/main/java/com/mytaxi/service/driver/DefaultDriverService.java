@@ -3,8 +3,10 @@ package com.mytaxi.service.driver;
 import com.mytaxi.dataaccessobject.DriverRepository;
 import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
+import com.mytaxi.domainvalue.EngineType;
 import com.mytaxi.domainvalue.GeoCoordinate;
 import com.mytaxi.domainvalue.OnlineStatus;
+import com.mytaxi.domainvalue.Transmission;
 import com.mytaxi.exception.CarAlreadyInUseException;
 import com.mytaxi.exception.DriverNotOnlineException;
 import com.mytaxi.exception.EntityNotFoundException;
@@ -14,6 +16,7 @@ import com.mytaxi.filterPattern.CriteriaWithConditon;
 import com.mytaxi.filterPattern.DriverCriterias;
 import com.mytaxi.service.BaseServiceImpl;
 import com.mytaxi.service.car.CarService;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,7 @@ import java.util.Objects;
  * <p/>
  */
 @Service
-public class DefaultDriverService extends BaseServiceImpl<DriverDO,Long> implements DriverService {
+public class DefaultDriverService extends BaseServiceImpl<DriverDO, Long> implements DriverService {
 
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(DefaultDriverService.class);
 
@@ -113,6 +116,27 @@ public class DefaultDriverService extends BaseServiceImpl<DriverDO,Long> impleme
         Criteria convertibleCarCriteria = new CriteriaWithConditon<DriverDO>(DriverCriterias.DRIVERS_WITH_CONVERTIBLE_CAR.get());
         Criteria andCritera = new AndCriteria(hyundaiCarCriteria, convertibleCarCriteria);
         return andCritera.satisfy(((List<DriverDO>) driverRepository.findAll()));
+    }
+
+    @Override
+    public List<DriverDO> findDriversWithAutomaticElectricCars() {
+        return getSession().createCriteria(DriverDO.class)
+                .createAlias("carDO", "_car")
+                .add(Restrictions.and(Restrictions.eq("onlineStatus", OnlineStatus.ONLINE),
+                        Restrictions.eq("_car.transmission", Transmission.AUTOMATIC),
+                        Restrictions.eq("_car.engineType", EngineType.ELECTRIC)))
+                .list();
+    }
+
+    @Override
+    public List<DriverDO> findDriversWithConvertibleHyundaiCars() {
+        return getSession().createCriteria(DriverDO.class)
+                .createAlias("carDO", "_car")
+                .createAlias("_car.manufacturer", "_manufacturer")
+                .add(Restrictions.and(Restrictions.eq("_manufacturer.name", "Hyundai"),
+                        Restrictions.eq("onlineStatus", OnlineStatus.ONLINE),
+                        Restrictions.eq("_car.convertible", true)))
+                .list();
     }
 
 }

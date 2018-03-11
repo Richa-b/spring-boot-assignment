@@ -108,5 +108,17 @@ public class DriverController
     }
 
 
+    //Following are the examples for fetching Drivers  Using Hibernate Criteria
 
+    @GetMapping("criteria/automaticElectric")
+    public List<DriverDTO> findDriversWithAutomaticElectricCars()
+    {
+        return DriverMapper.makeDriverDTOList(driverService.findDriversWithAutomaticElectricCars());
+    }
+
+    @GetMapping("criteria/hyundaiConvertible")
+    public List<DriverDTO> findDriversWithConvertibleHyundaiCars()
+    {
+        return DriverMapper.makeDriverDTOList(driverService.findDriversWithConvertibleHyundaiCars());
+    }
 }

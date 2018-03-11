@@ -4,20 +4,14 @@ import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
 import com.mytaxi.exception.CarAlreadyInUseException;
-import com.mytaxi.exception.ConstraintsViolationException;
 import com.mytaxi.exception.DriverNotOnlineException;
 import com.mytaxi.exception.EntityNotFoundException;
+import com.mytaxi.service.BaseService;
 
 import java.util.List;
 
-public interface DriverService
+public interface DriverService extends BaseService<DriverDO,Long>
 {
-
-    DriverDO find(Long driverId) throws EntityNotFoundException;
-
-    DriverDO create(DriverDO driverDO) throws ConstraintsViolationException;
-
-    void delete(Long driverId) throws EntityNotFoundException;
 
     void updateLocation(long driverId, double longitude, double latitude) throws EntityNotFoundException;
 
@@ -30,5 +24,11 @@ public interface DriverService
     List<DriverDO> findAllOnlineDrivers();
 
     List<DriverDO> findAllDriversWithConvertibleHyundaiCar();
+
+    List<DriverDO> findDriversWithAutomaticElectricCars();
+
+    List<DriverDO> findDriversWithConvertibleHyundaiCars();
+
+
 
 }
