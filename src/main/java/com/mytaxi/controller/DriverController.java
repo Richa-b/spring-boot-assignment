@@ -1,6 +1,8 @@
 package com.mytaxi.controller;
 
+import com.mytaxi.controller.mapper.CarMapper;
 import com.mytaxi.controller.mapper.DriverMapper;
+import com.mytaxi.datatransferobject.CarDTO;
 import com.mytaxi.datatransferobject.DriverDTO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
@@ -75,8 +77,8 @@ public class DriverController
     }
 
     @PutMapping("selectCar/{driverId}")
-    public void selectCar(@PathVariable long driverId,@RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
-        driverService.selectCar(driverId,carId);
+    public CarDTO selectCar(@PathVariable long driverId, @RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
+        return CarMapper.makeCarDTO(driverService.selectCar(driverId,carId));
     }
 
     @PutMapping("deselectCar/{driverId}")
@@ -90,4 +92,21 @@ public class DriverController
     {
         return DriverMapper.makeDriverDTOList(driverService.find(onlineStatus));
     }
+
+    // Following are the examples using Filter Pattern
+    // Though following should not be used, instead Hibernate criteria should be used.
+    // Hibernate examples added below
+    @GetMapping("filter/online")
+    public List<DriverDTO> findOnlineDrivers()
+    {
+        return DriverMapper.makeDriverDTOList(driverService.findAllOnlineDrivers());
+    }
+
+    @GetMapping("filter/hyundaiConvertible")
+    public List<DriverDTO> findAllDriversWithConvertibleHyundaiCar(){
+        return DriverMapper.makeDriverDTOList(driverService.findAllDriversWithConvertibleHyundaiCar());
+    }
+
+
+
 }

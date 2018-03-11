@@ -29,7 +29,6 @@ public class BaseDO {
     private ZonedDateTime lastUpdated;
 
     @CreatedBy
-    @Column(nullable = false)
     private String createdBy;
 
     @Id

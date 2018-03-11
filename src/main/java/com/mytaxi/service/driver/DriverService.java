@@ -1,5 +1,6 @@
 package com.mytaxi.service.driver;
 
+import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
 import com.mytaxi.exception.CarAlreadyInUseException;
@@ -22,8 +23,12 @@ public interface DriverService
 
     List<DriverDO> find(OnlineStatus onlineStatus);
 
-    void selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException;
+    CarDO selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException;
 
     void deselectCar(long driverId) throws EntityNotFoundException;
+
+    List<DriverDO> findAllOnlineDrivers();
+
+    List<DriverDO> findAllDriversWithConvertibleHyundaiCar();
 
 }

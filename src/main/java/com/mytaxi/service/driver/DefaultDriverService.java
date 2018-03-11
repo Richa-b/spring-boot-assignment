@@ -13,6 +13,10 @@ import com.mytaxi.exception.EntityNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
+import com.mytaxi.filterPattern.AndCriteria;
+import com.mytaxi.filterPattern.Criteria;
+import com.mytaxi.filterPattern.CriteriaWithConditon;
+import com.mytaxi.filterPattern.DriverCriterias;
 import com.mytaxi.service.car.CarService;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -122,18 +126,19 @@ public class DefaultDriverService implements DriverService {
 
     @Override
     @Transactional
-    public void selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException {
+    public CarDO selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException {
         DriverDO driverDO = findDriverChecked(driverId);
+        CarDO carDO = carService.find(carId);
         if (!OnlineStatus.ONLINE.equals(driverDO.getOnlineStatus())) {
             throw new DriverNotOnlineException("Driver with id:" + driverDO.getId() + " is not ONLINE");
         } else {
-            CarDO carDO = carService.find(carId);
             DriverDO someOtherDriver = carDO.getDriverDO();
             if (Objects.nonNull(someOtherDriver) && !someOtherDriver.getId().equals(driverDO.getId())) {
                 throw new CarAlreadyInUseException("Requested Car with id:" + carId + " is already in use by some other driver");
             }
             carDO.setDriverDO(driverDO);
         }
+        return carDO;
     }
 
     @Override
@@ -145,6 +150,21 @@ public class DefaultDriverService implements DriverService {
             carDO.setDriverDO(null);
         }
     }
+
+    @Override
+    public List<DriverDO> findAllOnlineDrivers() {
+        Criteria onlineDriversCriteria = new CriteriaWithConditon<DriverDO>(DriverCriterias.ONLINE_DRIVERS.get());
+        return onlineDriversCriteria.satisfy(((List<DriverDO>) driverRepository.findAll()));
+    }
+
+    @Override
+    public List<DriverDO> findAllDriversWithConvertibleHyundaiCar() {
+        Criteria hyundaiCarCriteria = new CriteriaWithConditon<DriverDO>(DriverCriterias.DRIVERS_WITH_HYUNDAI_CAR.get());
+        Criteria convertibleCarCriteria = new CriteriaWithConditon<DriverDO>(DriverCriterias.DRIVERS_WITH_CONVERTIBLE_CAR.get());
+        Criteria andCritera = new AndCriteria(hyundaiCarCriteria, convertibleCarCriteria);
+        return andCritera.satisfy(((List<DriverDO>) driverRepository.findAll()));
+    }
+
 
     private DriverDO findDriverChecked(Long driverId) throws EntityNotFoundException {
 
