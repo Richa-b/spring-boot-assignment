@@ -9,6 +9,7 @@ import com.mytaxi.exception.EntityNotFoundException;
 import com.mytaxi.service.car.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("v1/cars")
+@Secured({"ROLE_ADMIN"})
 public class CarController {
 
     private final CarService carService;

@@ -77,4 +77,12 @@ public class UserDO extends BaseDO implements UserDetails {
         return accountEnabled;
     }
 
+    public UserDO(String userName, Set<RoleDO> authorityList) {
+        this.username = userName;
+        this.roles = authorityList;
+    }
+
+    public UserDO() {
+    }
+
 }

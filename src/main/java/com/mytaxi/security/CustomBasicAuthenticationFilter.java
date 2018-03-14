@@ -1,5 +1,7 @@
 package com.mytaxi.security;
 
+import com.mytaxi.domainobject.RoleDO;
+import com.mytaxi.domainobject.UserDO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
@@ -16,10 +18,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.mytaxi.security.SecurityConstants.AUTH_TOKEN_KEY_NAME;
+import static com.mytaxi.security.SecurityConstants.CLAIM_ROLES;
 import static com.mytaxi.security.SecurityConstants.SECRET;
 
 @CommonsLog
@@ -44,10 +49,15 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
         log.info("-> Verifying User From JWT Token");
         String token = request.getHeader(AUTH_TOKEN_KEY_NAME);
         String userName;
+        Set<RoleDO> authorities;
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace("", ""));
             // parse the token.
             userName = claimsJws.getBody().getSubject();
+            List<String> roles = claimsJws.getBody().get(CLAIM_ROLES, List.class);
+            authorities = roles.stream()
+                    .map(RoleDO::new)
+                    .collect(Collectors.toSet());
             log.info(" User Verified from token");
         } catch (ExpiredJwtException expiredJwtException) {
             log.error("Session Expired::", expiredJwtException);
@@ -58,7 +68,7 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
         }
 
         if (Objects.nonNull(userName)) {
-            return new UsernamePasswordAuthenticationToken(userName, null, new ArrayList<>());
+            return new UsernamePasswordAuthenticationToken(new UserDO(userName,authorities), null, authorities);
         }
         return null;
     }

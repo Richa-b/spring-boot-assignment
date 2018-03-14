@@ -23,4 +23,11 @@ public class RoleDO extends BaseDO implements GrantedAuthority {
     public String getAuthority() {
         return authority;
     }
+
+    public RoleDO(String authority) {
+        this.authority = authority;
+    }
+
+    public RoleDO() {
+    }
 }

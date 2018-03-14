@@ -32,7 +32,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new CustomUsernamePasswordAuthenticationFilter(authenticationManager()))
-                .addFilter(new CustomBasicAuthenticationFilter(authenticationManager(),userDetailsService))
+                .addFilter(new CustomBasicAuthenticationFilter(authenticationManager()))
                 .csrf().disable();
     }
 

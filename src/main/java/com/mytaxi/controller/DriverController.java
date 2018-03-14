@@ -15,6 +15,7 @@ import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("v1/drivers")
+@Secured({"ROLE_ADMIN"})
 public class DriverController
 {
 
@@ -69,6 +71,7 @@ public class DriverController
 
 
     @PutMapping("/{driverId}")
+    @Secured({"ROLE_DRIVER","ROLE_ADMIN"})
     public void updateLocation(
         @Valid @PathVariable long driverId, @RequestParam double longitude, @RequestParam double latitude)
         throws ConstraintsViolationException, EntityNotFoundException
@@ -77,11 +80,13 @@ public class DriverController
     }
 
     @PutMapping("selectCar/{driverId}")
+    @Secured({"ROLE_DRIVER","ROLE_ADMIN"})
     public CarDTO selectCar(@PathVariable long driverId, @RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
         return CarMapper.makeCarDTO(driverService.selectCar(driverId,carId));
     }
 
     @PutMapping("deselectCar/{driverId}")
+    @Secured({"ROLE_DRIVER","ROLE_ADMIN"})
     public void deselectCar(@PathVariable long driverId) throws EntityNotFoundException{
         driverService.deselectCar(driverId);
     }
