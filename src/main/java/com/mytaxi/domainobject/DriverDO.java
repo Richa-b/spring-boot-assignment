@@ -2,31 +2,18 @@ package com.mytaxi.domainobject;
 
 import com.mytaxi.domainvalue.GeoCoordinate;
 import com.mytaxi.domainvalue.OnlineStatus;
-import java.time.ZonedDateTime;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import java.time.ZonedDateTime;
+
 @Entity
-@Table(
-    name = "driver",
-    uniqueConstraints = @UniqueConstraint(name = "uc_username", columnNames = {"username"})
-)
+@Table(name = "driver")
 @Getter
 @Setter
-public class DriverDO extends BaseDO
-{
-
-    @Column(nullable = false)
-    @NotNull(message = "Username can not be null!")
-    private String username;
-
-    @Column(nullable = false)
-    @NotNull(message = "Password can not be null!")
-    private String password;
+public class DriverDO extends UserDO {
 
     @Embedded
     private GeoCoordinate coordinate;
@@ -42,13 +29,11 @@ public class DriverDO extends BaseDO
     @OneToOne(mappedBy = "driverDO")
     private CarDO carDO;
 
-    private DriverDO()
-    {
+    private DriverDO() {
     }
 
 
-    public DriverDO(String username, String password)
-    {
+    public DriverDO(String username, String password) {
         this.username = username;
         this.password = password;
         this.coordinate = null;
@@ -57,8 +42,7 @@ public class DriverDO extends BaseDO
         this.setDeleted(false);
     }
 
-    public void setCoordinate(GeoCoordinate coordinate)
-    {
+    public void setCoordinate(GeoCoordinate coordinate) {
         this.coordinate = coordinate;
         this.dateCoordinateUpdated = ZonedDateTime.now();
     }
