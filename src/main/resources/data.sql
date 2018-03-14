@@ -2,22 +2,22 @@
  * CREATE Script for init of DB
  */
 
- -- Create drivers in user table
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (1, now(), false, 'driver01pw', 'driver01',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (2, now(), false, 'driver02pw', 'driver02',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (3, now(), false, 'driver03pw', 'driver03',now());
+ -- Create drivers in user table  --Decoded Password for all users is Test@123
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (1, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver01',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (2, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver02',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (3, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver03',now());
 
 
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (4, now(), false, 'driver04pw', 'driver04',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (5, now(), false, 'driver05pw', 'driver05',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (6, now(), false, 'driver06pw', 'driver06',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (7, now(), false, 'driver07pw', 'driver07',now());
-INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (8, now(), false, 'driver068pw', 'driver08',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (4, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver04',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (5, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver05',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (6, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver06',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (7, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver07',now());
+INSERT INTO user (id,date_created, deleted, password, username,last_updated) VALUES (8, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'driver08',now());
 
 -- Create 3 admin users
-insert into user (id, date_created, deleted, password, username,last_updated) values (9, now(), false, 'admin01pw', 'admin01',now());
-insert into user (id, date_created, deleted, password, username,last_updated) values (10, now(), false, 'admin02pw', 'admin02',now());
-insert into user (id, date_created, deleted, password, username,last_updated) values (11, now(), false, 'admin03pw', 'admin03',now());
+insert into user (id, date_created, deleted, password, username,last_updated) values (9, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'admin01',now());
+insert into user (id, date_created, deleted, password, username,last_updated) values (10, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'admin02',now());
+insert into user (id, date_created, deleted, password, username,last_updated) values (11, now(), false, '$2a$10$Yx3wNJnXw8dv7B7mSvgw7uKbzI4wKbzIsOMBtwF3mU5S7JHgxiXwS', 'admin03',now());
 
 
 -- Create 3 roles
