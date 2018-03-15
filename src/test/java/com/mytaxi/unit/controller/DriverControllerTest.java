@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -29,11 +30,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyDouble;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(DriverController.class)
+@WithMockUser
 public class DriverControllerTest {
 
     @MockBean
@@ -143,6 +146,25 @@ public class DriverControllerTest {
 
         // verify that service method was called once
         verify(driverService).delete(any(Long.class));
+
+    }
+
+    @Test
+    @WithMockUser(roles = "DRIVER")
+    public void deleteDriverSecuredTest() throws Exception {
+
+        Mockito.doNothing().when(driverService).delete(anyLong());
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.delete("/v1/drivers/" + 1l)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        int status = result.getResponse().getStatus();
+        assertEquals(HttpStatus.FORBIDDEN.value(), status);
+
+        // verify that service method was not called even once
+        verify(driverService,times(0)).delete(any(Long.class));
 
     }
 

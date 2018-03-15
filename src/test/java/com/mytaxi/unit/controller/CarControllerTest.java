@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,11 +28,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CarController.class)
+@WithMockUser
 public class CarControllerTest {
 
     @MockBean
@@ -183,6 +186,25 @@ public class CarControllerTest {
 
         // verify that service method was called once
         verify(carService).delete(any(Long.class));
+
+    }
+
+    @Test
+    @WithMockUser(roles = {"DRIVER"})
+    public void deleteCarNotExistSecuredTest() throws Exception {
+
+        Mockito.doThrow(new EntityNotFoundException("Entity Not found to be deleted")).when(carService).delete(anyLong());
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.delete("/v1/cars/" + 1l)
+                        .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        int status = result.getResponse().getStatus();
+        assertEquals(HttpStatus.FORBIDDEN.value(), status);
+
+        // verify that service method was not called
+        verify(carService,times(0)).delete(any(Long.class));
 
     }
 }
