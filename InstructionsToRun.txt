@@ -1,0 +1,78 @@
+Instructions To Run Project
+
+1) I have added lombok dependency in the project to generate getters and setters automatically.
+In intellij, a plugin is needed to be installed for this.
+In Intellij Go To Settings -> plugin -> Search For lombok plugin and install.
+If you do not install it , all the getters and setters would not be resolved in the editor.
+Though application will run successfully.
+
+========================================================================================================================
+2) Since Spring Security has been implemented.
+In order to run any API, you would have to login. Login Api is not visible in Swagger UI as it is created implicitly.
+So login  Using any rest client or use curl command
+
+----------------------------------------
+-Curl To Login as Admin User
+----------------------------------------
+
+curl  -X POST http://localhost:8080/login  -H 'Cache-Control: no-cache'  -H 'Content-Type: application/json'  -d '{
+"password" : "Test@123",
+"username" :"admin01"
+}' -D-
+
+----------------------------------------
+-Curl To Login as Driver User
+----------------------------------------
+
+curl  -X POST http://localhost:8080/login  -H 'Cache-Control: no-cache'  -H 'Content-Type: application/json'  -d '{
+"password" : "Test@123",
+"username" :"driver01"
+}' -D-
+
+
+----------------------------------------
+-Url To Login
+----------------------------------------
+localhost:8080/login
+
+----------------------------------------
+-Json To Login as Admin User
+----------------------------------------
+{
+"password" : "Test@123",
+"username" :"admin01"
+}
+
+
+----------------------------------------
+-Json To Login as Driver User
+----------------------------------------
+{
+"password" : "Test@123",
+"username" :"driver01"
+}
+
+========================================================================================================================
+
+
+3) After successful login a token would be returned in Header and this token would have to be passed for every API  in
+Header only. Output would be like below. Token is the value corresponding to 'api_key'.
+
+api_key: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkcml2ZXIwMSIsInJvbGVzIjpbIlJPTEVfRFJJVkVSIl0sImV4cCI6MTUyMTE0MDE4MH0.wmfGV3iR8stHZ5i3qQ4SuBxFVgvEXxzWGJtRWtzY05LFD5flXQ7NbyDrCW8wp9Ote5paChYB2knL8JoAYsqKYA
+
+========================================================================================================================
+
+4) Password for all the users has been kept as "Test@123" for simplicity. Check data.sql for Driver users and Admin Users.
+data.sql contains encrypted version of 'Test@123'
+
+========================================================================================================================
+
+5) Since we have to pass token in every request, in Swagger UI there is a text box in the top right with placeholder as
+ 'api_key'. Pass generated token from login request into that input box and that would be included in the header of any
+ API request.
+
+ Sample CURL Request for fetching cars details would be like:
+
+ curl -X GET \
+   http://localhost:8080/v1/cars -H 'Cache-Control: no-cache' -H 'Content-Type: application/json' -H 'api_key: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjAxIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJleHAiOjE1MjExNDY3NjV9.bIoG90chV4LO47_VU-WXxHDbH5uVCqkcYKPrn1dMM0JWCdW7WxNYj8jbR-2zBbHqWr3_eaInbBKR7eub64FeRg'
+
