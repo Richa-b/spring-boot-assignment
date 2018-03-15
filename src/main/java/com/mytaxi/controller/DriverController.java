@@ -6,10 +6,7 @@ import com.mytaxi.datatransferobject.CarDTO;
 import com.mytaxi.datatransferobject.DriverDTO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainvalue.OnlineStatus;
-import com.mytaxi.exception.CarAlreadyInUseException;
-import com.mytaxi.exception.ConstraintsViolationException;
-import com.mytaxi.exception.DriverNotOnlineException;
-import com.mytaxi.exception.EntityNotFoundException;
+import com.mytaxi.exception.*;
 import com.mytaxi.service.driver.DriverService;
 import java.util.List;
 import javax.validation.Valid;
@@ -81,13 +78,13 @@ public class DriverController
 
     @PutMapping("selectCar/{driverId}")
     @Secured({"ROLE_DRIVER","ROLE_ADMIN"})
-    public CarDTO selectCar(@PathVariable long driverId, @RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
+    public CarDTO selectCar(@PathVariable long driverId, @RequestParam Long carId ) throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
         return CarMapper.makeCarDTO(driverService.selectCar(driverId,carId));
     }
 
     @PutMapping("deselectCar/{driverId}")
     @Secured({"ROLE_DRIVER","ROLE_ADMIN"})
-    public void deselectCar(@PathVariable long driverId) throws EntityNotFoundException{
+    public void deselectCar(@PathVariable long driverId) throws EntityNotFoundException, CarSelectDeselectException {
         driverService.deselectCar(driverId);
     }
 

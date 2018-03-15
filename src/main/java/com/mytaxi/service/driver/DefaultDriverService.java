@@ -8,6 +8,7 @@ import com.mytaxi.domainvalue.GeoCoordinate;
 import com.mytaxi.domainvalue.OnlineStatus;
 import com.mytaxi.domainvalue.Transmission;
 import com.mytaxi.exception.CarAlreadyInUseException;
+import com.mytaxi.exception.CarSelectDeselectException;
 import com.mytaxi.exception.DriverNotOnlineException;
 import com.mytaxi.exception.EntityNotFoundException;
 import com.mytaxi.filterPattern.AndCriteria;
@@ -79,28 +80,34 @@ public class DefaultDriverService extends BaseServiceImpl<DriverDO, Long> implem
 
     @Override
     @Transactional
-    public CarDO selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException {
+    public CarDO selectCar(long driverId, long carId) throws EntityNotFoundException, DriverNotOnlineException, CarAlreadyInUseException, CarSelectDeselectException {
         DriverDO driverDO = find(driverId);
         CarDO carDO = carService.find(carId);
-        if (!OnlineStatus.ONLINE.equals(driverDO.getOnlineStatus())) {
-            throw new DriverNotOnlineException("Driver with id:" + driverDO.getId() + " is not ONLINE");
-        } else {
-            DriverDO someOtherDriver = carDO.getDriverDO();
-            if (Objects.nonNull(someOtherDriver) && !someOtherDriver.getId().equals(driverDO.getId())) {
-                throw new CarAlreadyInUseException("Requested Car with id:" + carId + " is already in use by some other driver");
+        if(Objects.isNull(driverDO.getCarDO())) {
+            if (!OnlineStatus.ONLINE.equals(driverDO.getOnlineStatus())) {
+                throw new DriverNotOnlineException("Driver with id:" + driverDO.getId() + " is not ONLINE");
+            } else {
+                DriverDO someOtherDriver = carDO.getDriverDO();
+                if (Objects.nonNull(someOtherDriver) && !someOtherDriver.getId().equals(driverDO.getId())) {
+                    throw new CarAlreadyInUseException("Requested Car with id:" + carId + " is already in use by some other driver");
+                }
+                carDO.setDriverDO(driverDO);
             }
-            carDO.setDriverDO(driverDO);
+            return carDO;
+        }else {
+            throw new CarSelectDeselectException("Driver has already a car associated with it.");
         }
-        return carDO;
     }
 
     @Override
     @Transactional
-    public void deselectCar(long driverId) throws EntityNotFoundException {
+    public void deselectCar(long driverId) throws EntityNotFoundException, CarSelectDeselectException {
         DriverDO driverDO = find(driverId);
         CarDO carDO = carService.findByDriver(driverDO);
         if (Objects.nonNull(carDO)) {
             carDO.setDriverDO(null);
+        }else {
+            throw new CarSelectDeselectException("No car has been allocated to the driver");
         }
     }
 

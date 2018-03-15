@@ -5,10 +5,7 @@ import com.mytaxi.domainobject.CarDO;
 import com.mytaxi.domainobject.DriverDO;
 import com.mytaxi.domainobject.ManufacturerDO;
 import com.mytaxi.domainvalue.OnlineStatus;
-import com.mytaxi.exception.CarAlreadyInUseException;
-import com.mytaxi.exception.ConstraintsViolationException;
-import com.mytaxi.exception.DriverNotOnlineException;
-import com.mytaxi.exception.EntityNotFoundException;
+import com.mytaxi.exception.*;
 import com.mytaxi.service.car.CarService;
 import com.mytaxi.service.driver.DefaultDriverService;
 import com.mytaxi.service.driver.DriverService;
@@ -136,7 +133,7 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void selectCar() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
+    public void selectCar() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
         DriverDO defaultDriverDO = TestUtils.getTestDriverDO(1).get(0);
         defaultDriverDO.setOnlineStatus(OnlineStatus.ONLINE);
         CarDO defaultCarDO = TestUtils.getTestCarDO(1).get(0);
@@ -151,7 +148,7 @@ public class DriverServiceTest {
     }
 
     @Test(expected = DriverNotOnlineException.class)
-    public void selectCarWhenNotOnline() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
+    public void selectCarWhenNotOnline() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
         DriverDO defaultDriverDO = TestUtils.getTestDriverDO(1).get(0);
         CarDO defaultCarDO = TestUtils.getTestCarDO(1).get(0);
         Mockito.when(driverRepository.findOne(anyLong())).thenReturn(defaultDriverDO);
@@ -162,7 +159,7 @@ public class DriverServiceTest {
     }
 
     @Test(expected = CarAlreadyInUseException.class)
-    public void selectCarWhenAlreadyAllotted() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException {
+    public void selectCarWhenAlreadyAllotted() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
         List<DriverDO> defaultDriverDOList = TestUtils.getTestDriverDO(2);
         DriverDO defaultDriverDO = defaultDriverDOList.get(0);
         defaultDriverDO.setOnlineStatus(OnlineStatus.ONLINE);
@@ -179,7 +176,7 @@ public class DriverServiceTest {
 
 
     @Test
-    public void deselectCar() throws EntityNotFoundException {
+    public void deselectCar() throws EntityNotFoundException, CarSelectDeselectException {
         DriverDO defaultDriverDO = TestUtils.getTestDriverDO(1).get(0);
         CarDO defaultCarDO = TestUtils.getTestCarDO(1).get(0);
         defaultCarDO.setDriverDO(defaultDriverDO);
@@ -193,7 +190,7 @@ public class DriverServiceTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void deselectCarWhenDriverNotFound() throws EntityNotFoundException {
+    public void deselectCarWhenDriverNotFound() throws EntityNotFoundException, CarSelectDeselectException {
         CarDO defaultCarDO = TestUtils.getTestCarDO(1).get(0);
         Mockito.when(driverRepository.findOne(anyLong())).thenReturn(null);
         Mockito.when(carService.findByDriver(any(DriverDO.class))).thenReturn(defaultCarDO);
