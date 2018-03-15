@@ -159,7 +159,7 @@ public class DriverServiceTest {
     }
 
     @Test(expected = CarAlreadyInUseException.class)
-    public void selectCarWhenAlreadyAllotted() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
+    public void selectCarWhenAlreadyAllottedToSomeOtherDriver() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
         List<DriverDO> defaultDriverDOList = TestUtils.getTestDriverDO(2);
         DriverDO defaultDriverDO = defaultDriverDOList.get(0);
         defaultDriverDO.setOnlineStatus(OnlineStatus.ONLINE);
@@ -172,6 +172,16 @@ public class DriverServiceTest {
         CarDO carDO = driverService.selectCar(1l,1l);
 
         assertNull(carDO);
+    }
+
+    @Test(expected = CarSelectDeselectException.class)
+    public void selectCarWhenAlreadyAllottedToTheSameDriver() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
+        DriverDO driverDO = TestUtils.getTestDriverDO(1).get(0);
+        CarDO defaultCarDO = TestUtils.getTestCarDO(1).get(0);
+        driverDO.setCarDO(new CarDO());
+        Mockito.when(driverRepository.findOne(anyLong())).thenReturn(driverDO);
+        Mockito.when(carService.find(anyLong())).thenReturn(defaultCarDO);
+        driverService.selectCar(1l,1l);
     }
 
 
@@ -200,6 +210,16 @@ public class DriverServiceTest {
         verify(carService).findByDriver(any(DriverDO.class));
     }
 
+    @Test(expected = CarSelectDeselectException.class)
+    public void deselectCarWhenDriverHasNoCarAllocated() throws EntityNotFoundException, CarAlreadyInUseException, DriverNotOnlineException, CarSelectDeselectException {
+        DriverDO defaultDriverDO = TestUtils.getTestDriverDO(1).get(0);
+        Mockito.when(driverRepository.findOne(anyLong())).thenReturn(defaultDriverDO);
+        Mockito.when(carService.findByDriver(any(DriverDO.class))).thenReturn(null);
+        driverService.deselectCar(1l);
+
+        verify(driverRepository).findOne(anyLong());
+        verify(carService).findByDriver(any(DriverDO.class));
+    }
 
     @Test
     public void findAllOnlineDrivers() {
