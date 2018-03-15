@@ -16,8 +16,12 @@ import java.util.Objects;
 @CommonsLog
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public CustomUserDetailsService(final UserService userService) {
+        this.userService = userService;
+    }
 
     @Transactional
     public UserDO loadUserByUsername(String username) throws UsernameNotFoundException {
