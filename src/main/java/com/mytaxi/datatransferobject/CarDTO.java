@@ -1,6 +1,7 @@
 package com.mytaxi.datatransferobject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mytaxi.domainvalue.CarType;
 import com.mytaxi.domainvalue.EngineType;
 import com.mytaxi.domainvalue.Transmission;
@@ -59,6 +60,11 @@ public class CarDTO {
 
     public static CarDTO.CarDTOBuilder newBuilder() {
         return new CarDTO.CarDTOBuilder();
+    }
+
+    @JsonProperty
+    public Long getId() {
+        return id;
     }
 
     @Getter

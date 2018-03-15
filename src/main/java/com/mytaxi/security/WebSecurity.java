@@ -50,7 +50,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     // Added to allow user to passs Auth Token in header from Swagger UI
     @Bean
     SecurityConfiguration security() {
-        return new SecurityConfiguration(null, null, null, null, "Bearer access_token", ApiKeyVehicle.HEADER, "Authorization");
+        return new SecurityConfiguration(null, null, null, null, "", ApiKeyVehicle.HEADER, "Authorization");
     }
 
 }
